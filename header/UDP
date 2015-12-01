@@ -1,0 +1,6 @@
+SourcePort: 16: int, hex
+DestinationPort: 16: int, hex
+Length: 16: int, hex
+Checksum: 16: hex
+Payload: Length * 8 - 64: hex
+

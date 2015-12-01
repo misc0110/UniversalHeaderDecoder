@@ -1,0 +1,10 @@
+Start: 3: bin
+TF: 2: bin, int
+NextHeader: 1: bin
+HopLimit: 2: bin, int
+CID: 1: bin
+SAC: 1: bin
+SAM: 2: bin, int
+M: 1: bin
+DAC: 1: bin
+DAM: 2: bin, int

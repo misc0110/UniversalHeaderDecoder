@@ -1,0 +1,15 @@
+Magic: 16: hex, str
+FileSize: 32: intE
+Zero: 32: hex
+Position: 32: intE
+HeaderLen: 32: intE
+Width: 32: intE
+Height: 32: intE
+Layers: 16: intE
+Depth: 16: intE
+Compression: 32: intE
+DataLength: 32: intE
+XPixelMeter: 32: intE
+YPixelMeter: 32: intE
+UsedColors: 32: intE
+ImportantColors: 32: intE

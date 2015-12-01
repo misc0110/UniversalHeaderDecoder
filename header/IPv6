@@ -1,0 +1,8 @@
+Version: 4: int
+TrafficClass: 8: hex
+FlowLabel: 20: hex
+Length: 16: int
+NextHeader: 8: hex, int
+HopLimit: 8: int
+Source: 128: hex
+Destination: 128: hex

@@ -1,0 +1,6 @@
+Type: 8: int, hex
+Code: 8: int, hex
+Checksum: 16: hex
+Identifier: 16: hex
+Sequence: 16: hex
+Payload: (Length - 8) * 8: hex
