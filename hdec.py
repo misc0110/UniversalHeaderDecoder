@@ -4,11 +4,12 @@ from bitstring import BitStream, Bits
 import struct
 
 class Field:
-    def __init__(self, name, bits, types, prefix = ""):
+    def __init__(self, name, bits, types, prefix = "", condition = "True"):
         self.name = name
         self.bits = bits
         self.types = types
         self.prefix = prefix
+        self.condition = condition
     
     def __repr__(self):
         return self.name + " (" + str(self.bits) + ")"
@@ -30,6 +31,9 @@ class Field:
     
     def getPrefix(self):
         return self.prefix
+    
+    def getCondition(self):
+        return self.condition
 
 
 def parseDefinition(definition, bits = []):
@@ -37,11 +41,18 @@ def parseDefinition(definition, bits = []):
         d = df.readlines()
         for l in d:
             p = l.split(":")
-            if len(p) == 2:
-                bits.append(Field(p[0].strip(), (p[1].strip()), ["hex", "int", "bin"], definition))
-            elif len(p) == 3:
-                types = list(map(lambda x: x.strip(), p[2].strip().split(",")))
-                bits.append(Field(p[0].strip(), (p[1].strip()), types, definition))
+            name = p[0].strip()
+            bitlen = p[1].strip()
+            ptypes = ["hex", "int", "bin"]
+            cond = "True"
+            
+            if len(p) == 3:
+                ptypes = list(map(lambda x: x.strip(), p[2].strip().split(",")))
+            if len(p) == 4:
+                cond = p[3].strip()
+            
+            bits.append(Field(name, bitlen, ptypes, definition, cond))
+            
     return bits
 
 def endianness(x, endian, bits):
@@ -96,34 +107,42 @@ def main(argv):
         
         bitlen = 0
         lenexpr = bit.getBits()
+        condexpr = bit.getCondition()
         for p in parsed.keys():
             lenexpr = lenexpr.replace(p, str(parsed[p]))
+            condexpr = condexpr.replace(p, str(parsed[p]))
         try:
             bitlen = eval(lenexpr)
         except:
             print("Error: " + str(bit.getBits()) + " is not a valid size!")
             return
+        try:
+            cond = eval(condexpr)
+        except:
+            print("Error: " + str(bit.Condition()) + " is not a valid condition!")
+            return
         
-        val = field.read(bitlen)
-        parsed[bit.getName()] = val.uint
-        pos += bitlen
-        if last_header is not bit.getPrefix():
-            last_header = bit.getPrefix()
-            print("")
-        
-        out = bit.getName() + ": "
-        for t, endian in bit.getTypes():
-            if t == "hex":
-                out += "0x" + val.hex + " "
-            if t == "int":
-                out += str(endianness(val.uint, endian, int(bitlen))) + " "
-            if t == "bin":
-                out += "0b" + val.bin + " "
-            if t == "str":
-                s = ""
-                for si in range(0, len(str(val)[2:]), 2):
-                    out += str(chr(int(str(val)[si + 2:si + 4], 16)))
-        print(out)
+        if cond:
+            val = field.read(bitlen)
+            parsed[bit.getName()] = val.uint
+            pos += bitlen
+            if last_header is not bit.getPrefix():
+                last_header = bit.getPrefix()
+                print("")
+            
+            out = bit.getName() + ": "
+            for t, endian in bit.getTypes():
+                if t == "hex":
+                    out += "0x" + val.hex + " "
+                if t == "int":
+                    out += str(endianness(val.uint, endian, int(bitlen))) + " "
+                if t == "bin":
+                    out += "0b" + val.bin + " "
+                if t == "str":
+                    s = ""
+                    for si in range(0, len(str(val)[2:]), 2):
+                        out += str(chr(int(str(val)[si + 2:si + 4], 16)))
+            print(out)
 
 if __name__ == "__main__":
     main(sys.argv)

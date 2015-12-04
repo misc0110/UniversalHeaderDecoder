@@ -1,0 +1,6 @@
+Start: 5: bin
+HasChecksum: 1: bin
+Ports: 2: bin
+PortOffset1: 4: bin, int: Ports == 3
+PortOffset2: 4: bin, int: Ports == 3
+Checksum: 16: hex: HasChecksum == 1
