@@ -46,7 +46,7 @@ def parseDefinition(definition, bits = []):
             ptypes = ["hex", "int", "bin"]
             cond = "True"
             
-            if len(p) == 3:
+            if len(p) >= 3:
                 ptypes = list(map(lambda x: x.strip(), p[2].strip().split(",")))
             if len(p) == 4:
                 cond = p[3].strip()
@@ -108,7 +108,7 @@ def main(argv):
         bitlen = 0
         lenexpr = bit.getBits()
         condexpr = bit.getCondition()
-        for p in parsed.keys():
+        for p in sorted(parsed.keys(), key=len, reverse=True):
             lenexpr = lenexpr.replace(p, str(parsed[p]))
             condexpr = condexpr.replace(p, str(parsed[p]))
         try:
@@ -119,11 +119,16 @@ def main(argv):
         try:
             cond = eval(condexpr)
         except:
-            print("Error: " + str(bit.Condition()) + " is not a valid condition!")
+            print("Error: " + str(bit.getCondition()) + " is not a valid condition! (Parsed to " + condexpr + ")")
             return
         
         if cond:
-            val = field.read(bitlen)
+            try:
+                val = field.read(bitlen)
+            except:
+                print("Could not read field " + str(bit.getName()) + " with " + str(bitlen) + " bits!")
+                continue
+            
             parsed[bit.getName()] = val.uint
             pos += bitlen
             if last_header is not bit.getPrefix():

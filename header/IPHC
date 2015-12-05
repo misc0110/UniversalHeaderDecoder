@@ -1,6 +1,6 @@
 Start: 3: bin
 TF: 2: bin, int
-NextHeader: 1: bin
+NH: 1: bin
 HopLimit: 2: bin, int
 CID: 1: bin
 SAC: 1: bin
@@ -8,3 +8,27 @@ SAM: 2: bin, int
 M: 1: bin
 DAC: 1: bin
 DAM: 2: bin, int
+SourceContext: 4: hex, int: CID == 1
+DestinationContext: 4: hex, int: CID == 1
+ECN: 2: bin, int: TF == 0 or TF == 1 or TF == 2
+DSCP: 6: bin, int: TF == 0 or TF == 2
+Padding: 2: bin: TF == 1
+Padding: 4: bin: TF == 0
+FlowLabel: 20: hex: TF == 0 or TF == 1
+NextHeader: 8: hex, int: NH == 0
+HopLim: 8: hex, int: HopLimit == 0
+SourceAddress: 128: hex: SAC == 0 and SAM == 0
+SourceAddress: 64: hex: SAC == 0 and SAM == 1
+SourceAddress: 16: hex: SAC == 0 and SAM == 2
+SourceAddress: 64: hex: SAC == 1 and SAM == 1
+SourceAddress: 16: hex: SAC == 1 and SAM == 2
+DestinationAddress: 128: hex: M == 0 and DAC == 0 and DAM == 0
+DestinationAddress: 64: hex: M == 0 and DAC == 0 and DAM == 1
+DestinationAddress: 16: hex: M == 0 and DAC == 0 and DAM == 2
+DestinationAddress: 64: hex: M == 0 and DAC == 1 and DAM == 1
+DestinationAddress: 16: hex: M == 0 and DAC == 1 and DAM == 2
+DestinationAddress: 128: hex: M == 1 and DAC == 0 and DAM == 0
+DestinationAddress: 48: hex: M == 1 and DAC == 0 and DAM == 1
+DestinationAddress: 32: hex: M == 1 and DAC == 0 and DAM == 2
+DestinationAddress: 8: hex: M == 1 and DAC == 0 and DAM == 3
+DestinationAddress: 48: hex: M == 1 and DAC == 1 and DAM == 0
